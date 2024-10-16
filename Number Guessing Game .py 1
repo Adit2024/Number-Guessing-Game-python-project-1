@@ -1,0 +1,50 @@
+import random
+import tkinter as tk
+from tkinter import messagebox
+
+class GuessingGameApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Guess the Number")
+        
+        self.number_to_guess = random.randint(1, 100)
+        self.attempts = 7
+
+        self.label = tk.Label(root, text="Guess a number between 1 and 100:")
+        self.label.pack(pady=10)
+        
+        self.entry = tk.Entry(root)
+        self.entry.pack(pady=5)
+
+        self.button = tk.Button(root, text="Submit Guess", command=self.check_guess)
+        self.button.pack(pady=10)
+
+        self.attempts_label = tk.Label(root, text=f"Attempts left: {self.attempts}")
+        self.attempts_label.pack(pady=5)
+
+    def check_guess(self):
+        try:
+            guess = int(self.entry.get())
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter a valid number.")
+            return
+
+        if guess < self.number_to_guess:
+            messagebox.showinfo("Result", "Too low!")
+        elif guess > self.number_to_guess:
+            messagebox.showinfo("Result", "Too high!")
+        else:
+            messagebox.showinfo("Success", f"Congratulations! You guessed it right. The number was {self.number_to_guess}")
+            self.root.quit()
+
+        self.attempts -= 1
+        self.attempts_label.config(text=f"Attempts left: {self.attempts}")
+        
+        if self.attempts == 0:
+            messagebox.showinfo("Game Over", f"Out of attempts! The number was {self.number_to_guess}")
+            self.root.quit()
+
+# Create the Tkinter window
+root = tk.Tk()
+app = GuessingGameApp(root)
+root.mainloop()
